@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set common variables
-model=""FreedomIntelligence/AceGPT-7B""
+model="FreedomIntelligence/AceGPT-7B"
 sparsity_ratio=0.5
 cuda_device=0
 
