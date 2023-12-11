@@ -15,15 +15,15 @@ except:
     has_wandb = False    
 
 
-def get_jais(model):
+def get_bloom(model):
     import torch
     def skip(*args, **kwargs):
         pass
     torch.nn.init.kaiming_uniform_ = skip
     torch.nn.init.uniform_ = skip
     torch.nn.init.normal_ = skip
-    from transformers import AutoModelForCausalLM
-    model = AutoModelForCausalLM.from_pretrained(model, trust_remote_code=True, torch_dtype='auto')
+    from transformers import BloomForCausalLM
+    model = BloomForCausalLM.from_pretrained(model, torch_dtype='auto')
     model.seqlen = 2048
     return model
 
@@ -114,7 +114,7 @@ def bloom_sequential(model, dataloader, dev, means=None, stds=None):
     model.config.use_cache = use_cache
 
 @torch.no_grad()
-def jais_eval(model, testenc, dev, dataset: str, log_wandb: bool = False):
+def bloom_eval(model, testenc, dev, dataset: str, log_wandb: bool = False):
     print('Evaluation...')
 
     testenc = testenc.input_ids
@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         'model', type=str,
-        help='Jais model to load; pass `bigscience/bloom-X`.'
+        help='BLOOM model to load; pass `bigscience/bloom-X`.'
     )
     parser.add_argument(
         'dataset', type=str, choices=['wikitext2', 'ptb', 'c4'],
@@ -279,7 +279,7 @@ if __name__ == '__main__':
         assert has_wandb, "wandb not installed try `pip install wandb`"
         wandb.init(config=args)
 
-    model = get_jais(args.model)
+    model = get_bloom(args.model)
     model.eval()
 
     dataloader, testloader = get_loaders(
@@ -300,7 +300,7 @@ if __name__ == '__main__':
             dataset, seed=args.seed, model=args.model, seqlen=model.seqlen
         )
         print("Dataset:", dataset)
-        jais_eval(model, testloader, DEV, dataset, args.log_wandb)
+        bloom_eval(model, testloader, DEV, dataset, args.log_wandb)
     
     if args.save:
         model.save_pretrained(args.save)
