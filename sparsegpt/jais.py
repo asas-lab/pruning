@@ -28,7 +28,7 @@ def get_jais(model):
     return model
 
 @torch.no_grad()
-def bloom_sequential(model, dataloader, dev, means=None, stds=None):
+def jais_sequential(model, dataloader, dev, means=None, stds=None):
     print('Starting ...')
 
     use_cache = model.config.use_cache
@@ -213,10 +213,10 @@ if __name__ == '__main__':
 
     parser.add_argument(
         'model', type=str,
-        help='Jais model to load; pass `bigscience/bloom-X`.'
+        help='Jais model to load'
     )
     parser.add_argument(
-        'dataset', type=str, choices=['wikitext2', 'ptb', 'c4'],
+        'dataset', type=str, choices=['wiki', 'ptb', 'c4', 'arabic_wikipedia'],
         help='Where to extract calibration data from.'
     )
     parser.add_argument(
@@ -288,14 +288,14 @@ if __name__ == '__main__':
 
     if (args.sparsity or args.prunen) and not args.gmp:
         tick = time.time()
-        bloom_sequential(model, dataloader, DEV)
+        jais_sequential(model, dataloader, DEV)
         for n, p in model.named_parameters():
             print(n, torch.mean((p == 0).float()))
             if 'dense_4h_to_h' in n:
                 break
         print(time.time() - tick)
 
-    for dataset in ['wikitext2', 'ptb', 'c4']:
+    for dataset in ['wiki', 'ptb', 'c4', 'arabic_wikipedia']:
         dataloader, testloader = get_loaders(
             dataset, seed=args.seed, model=args.model, seqlen=model.seqlen
         )
