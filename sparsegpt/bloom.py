@@ -216,7 +216,7 @@ if __name__ == '__main__':
         help='BLOOM model to load; pass `bigscience/bloom-X`.'
     )
     parser.add_argument(
-        'dataset', type=str, choices=['wikitext2', 'ptb', 'c4'],
+        'dataset', type=str, choices=['wikitext2', 'ptb', 'c4', 'arabic_wikipedia'],
         help='Where to extract calibration data from.'
     )
     parser.add_argument(
