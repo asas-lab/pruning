@@ -1,5 +1,4 @@
 import random
-
 import numpy as np
 import torch
 from datasets import load_dataset, DatasetDict
@@ -26,9 +25,9 @@ def get_tokenizer(model):
 
 def get_arabic_wikipedia(nsamples, seed, seqlen, model, tokenizer):
 
-    dataset = load_dataset("SaiedAlshahrani/Arabic_Wikipedia_20230101_nobots")
+    dataset = load_dataset("asas-ai/Joud", "wiki_20221201")
     
-    train_testvalid = dataset['train'].train_test_split(test_size=0.2)
+    train_testvalid = dataset['train'].train_test_split(test_size=0.1)
 
     test_valid = train_testvalid['test'].train_test_split(test_size=0.5)
 
