@@ -295,7 +295,7 @@ if __name__ == '__main__':
                 break
         print(time.time() - tick)
 
-    for dataset in ['wikitext2', 'ptb', 'c4', 'arabic_wikipedia']:
+    for dataset in ['arabic_wikipedia']:
         dataloader, testloader = get_loaders(
             dataset, seed=args.seed, model=args.model, seqlen=model.seqlen
         )

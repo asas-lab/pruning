@@ -25,21 +25,12 @@ def get_tokenizer(model):
 
 def get_arabic_wikipedia(nsamples, seed, seqlen, model, tokenizer):
 
-    dataset = load_dataset("asas-ai/Joud", "wiki_20221201")
-    
-    train_testvalid = dataset['train'].train_test_split(test_size=0.1)
 
-    test_valid = train_testvalid['test'].train_test_split(test_size=0.5)
+    traindata = load_dataset("asas-ai/ArNLI", split='test')
+    testdata = load_dataset("asas-ai/ArNLI", split='validation')
 
-    ds = DatasetDict({
-        'train': train_testvalid['train'],
-        'test': test_valid['test'],
-        'valid': test_valid['train']})
-    
-
-    # use valid for training becuase train set is huge
-    trainenc = tokenizer(" ".join(ds['valid']['text']), return_tensors='pt')
-    testenc = tokenizer("\n\n".join(ds['test']['text']), return_tensors='pt')
+    trainenc = tokenizer(" ".join(testdata['premise']), return_tensors='pt')
+    testenc = tokenizer("\n\n".join(testdata['premise']), return_tensors='pt')
 
     random.seed(seed)
     trainloader = []
